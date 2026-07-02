@@ -102,7 +102,7 @@ function TripPage() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["trip-bookings", tripId] });
-        }
+        },
       )
       .subscribe();
 
@@ -143,12 +143,6 @@ function TripPage() {
     if (!isValid) return;
 
     if (!trip) return;
-    const { data: session } = await supabase.auth.getUser();
-    if (!session.user) {
-      toast.error("Please sign in first");
-      navigate({ to: "/auth", search: { mode: "signin", redirect: `/trips/${tripId}` } });
-      return;
-    }
     if (selected.length === 0) return toast.error("Pick at least one seat");
     const normalized = normalizeKenyanPhone(phoneValue);
     if (!normalized) return toast.error("Enter a valid Kenyan phone number");
@@ -246,9 +240,12 @@ function TripPage() {
               selected={selected}
               onToggle={(s) =>
                 setSelected((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]))
-            }
+              }
             />
-            <div className="mt-4 flex justify-center gap-6 text-xs text-muted-foreground" aria-hidden="true">
+            <div
+              className="mt-4 flex justify-center gap-6 text-xs text-muted-foreground"
+              aria-hidden="true"
+            >
               <div className="flex items-center gap-1">
                 <div className="h-3 w-3 rounded-sm bg-muted" /> Available
               </div>
@@ -286,11 +283,7 @@ function TripPage() {
                       <Smartphone className="h-4 w-4" /> M-Pesa phone
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="07xx xxx xxx"
-                        {...field}
-                        aria-required="true"
-                      />
+                      <Input placeholder="07xx xxx xxx" {...field} aria-required="true" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

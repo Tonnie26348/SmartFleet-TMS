@@ -23,11 +23,11 @@ interface DataTableProps<T> {
   className?: string;
 }
 
-export function DataTable<T>({ 
-  columns, 
-  data, 
-  emptyMessage = "No data available.", 
-  className 
+export function DataTable<T>({
+  columns,
+  data,
+  emptyMessage = "No data available.",
+  className,
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
@@ -45,8 +45,8 @@ export function DataTable<T>({
           <TableHeader>
             <TableRow>
               {columns.map((col, index) => (
-                <TableHead 
-                  key={index} 
+                <TableHead
+                  key={index}
                   className={cn(col.align === "right" && "text-right", col.className)}
                 >
                   {col.header}
@@ -58,8 +58,8 @@ export function DataTable<T>({
             {data.map((item, rowIndex) => (
               <TableRow key={rowIndex}>
                 {columns.map((col, colIndex) => (
-                  <TableCell 
-                    key={colIndex} 
+                  <TableCell
+                    key={colIndex}
                     className={cn(col.align === "right" && "text-right", col.className)}
                   >
                     {col.accessor(item)}
@@ -76,7 +76,10 @@ export function DataTable<T>({
         {data.map((item, rowIndex) => (
           <Card key={rowIndex} className="p-4 space-y-3 shadow-sm">
             {columns.map((col, colIndex) => (
-              <div key={colIndex} className="flex justify-between items-start gap-4 border-b border-border/50 pb-2 last:border-0 last:pb-0">
+              <div
+                key={colIndex}
+                className="flex justify-between items-start gap-4 border-b border-border/50 pb-2 last:border-0 last:pb-0"
+              >
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   {col.header}
                 </span>

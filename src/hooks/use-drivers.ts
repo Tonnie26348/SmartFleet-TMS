@@ -5,9 +5,15 @@ import { Driver } from "@/types/driver";
 export const driversQO = queryOptions({
   queryKey: ["drivers"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("drivers").select("*");
+    const { data, error } = await supabase.from("drivers").select(`
+        *,
+        profiles (
+          full_name,
+          phone
+        )
+      `);
     if (error) throw error;
-    return (data ?? []) as Driver[];
+    return (data ?? []) as any[];
   },
 });
 
@@ -16,10 +22,33 @@ export const useDrivers = () => {
   const query = useQuery(driversQO);
 
   const addDriverMutation = useMutation({
-    mutationFn: async (driver: Omit<Driver, "id" | "created_at">) => {
-      const { error } = await supabase.from("drivers").insert([driver]);
-      if (error) throw error;
-      return driver;
+    mutationFn: async (driverData: any) => {
+      // 1. Create the profile first
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .insert([
+          {
+            full_name: driverData.full_name,
+            phone: driverData.phone,
+          },
+        ])
+        .select()
+        .single();
+
+      if (profileError) throw profileError;
+
+      // 2. Create the driver linked to the profile
+      const { error: driverError } = await supabase.from("drivers").insert([
+        {
+          user_id: profile.id,
+          license_no: driverData.license_no,
+          license_expiry: driverData.license_expiry,
+        },
+      ]);
+
+      if (driverError) throw driverError;
+
+      return driverData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["drivers"] });

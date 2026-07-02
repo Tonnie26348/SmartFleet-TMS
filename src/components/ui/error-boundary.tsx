@@ -51,12 +51,7 @@ export class ErrorBoundary extends Component<Props, State> {
               This section failed to load. Please try refreshing the area.
             </p>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={this.handleReset}
-            className="gap-2"
-          >
+          <Button variant="outline" size="sm" onClick={this.handleReset} className="gap-2">
             <RefreshCcw className="h-3 w-3" /> Try Again
           </Button>
         </Card>

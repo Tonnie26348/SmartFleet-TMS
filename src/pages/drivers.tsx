@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { PageHeader } from "@/components/page-header";
 import { UserPlus, Phone, FileText, Calendar, BadgeCheck } from "lucide-react";
@@ -39,9 +45,9 @@ export const DriversPage = () => {
       accessor: (driver) => (
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-            {driver.full_name[0].toUpperCase()}
+            {(driver.profiles?.full_name || "D")[0].toUpperCase()}
           </div>
-          {driver.full_name}
+          {driver.profiles?.full_name || "Unknown Driver"}
         </div>
       ),
     },
@@ -49,7 +55,7 @@ export const DriversPage = () => {
       header: "Contact",
       accessor: (driver) => (
         <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Phone className="h-3 w-3" /> {driver.phone}
+          <Phone className="h-3 w-3" /> {driver.profiles?.phone || "No phone"}
         </div>
       ),
     },
@@ -96,18 +102,22 @@ export const DriversPage = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-muted-foreground">Loading drivers...</div>;
+  if (loading)
+    return <div className="p-8 text-center text-muted-foreground">Loading drivers...</div>;
 
   return (
     <div className="p-8 space-y-6">
-      <PageHeader 
-        title="Driver Management" 
+      <PageHeader
+        title="Driver Management"
         subtitle="Manage your fleet drivers and license compliance."
       >
-        <Dialog open={isOpen} onOpenChange={(open) => {
-          setIsOpen(open);
-          if (!open) reset();
-        }}>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open) reset();
+          }}
+        >
           <DialogTrigger asChild>
             <Button className="gap-2">
               <UserPlus className="h-4 w-4" /> Add Driver
@@ -120,37 +130,29 @@ export const DriversPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="full_name">Full Name</Label>
-                <Input 
-                  id="full_name" 
-                  {...register("full_name")} 
-                />
-                {errors.full_name && <p className="text-xs text-destructive">{errors.full_name.message}</p>}
+                <Input id="full_name" {...register("full_name")} />
+                {errors.full_name && (
+                  <p className="text-xs text-destructive">{errors.full_name.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input 
-                  id="phone" 
-                  placeholder="07..."
-                  {...register("phone")} 
-                />
+                <Input id="phone" placeholder="07..." {...register("phone")} />
                 {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="license_no">License Number</Label>
-                <Input 
-                  id="license_no" 
-                  {...register("license_no")} 
-                />
-                {errors.license_no && <p className="text-xs text-destructive">{errors.license_no.message}</p>}
+                <Input id="license_no" {...register("license_no")} />
+                {errors.license_no && (
+                  <p className="text-xs text-destructive">{errors.license_no.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="license_expiry">License Expiry</Label>
-                <Input 
-                  id="license_expiry" 
-                  type="date" 
-                  {...register("license_expiry")} 
-                />
-                {errors.license_expiry && <p className="text-xs text-destructive">{errors.license_expiry.message}</p>}
+                <Input id="license_expiry" type="date" {...register("license_expiry")} />
+                {errors.license_expiry && (
+                  <p className="text-xs text-destructive">{errors.license_expiry.message}</p>
+                )}
               </div>
               <Button type="submit" className="w-full" disabled={isAdding}>
                 {isAdding ? "Adding..." : "Register Driver"}
@@ -161,10 +163,10 @@ export const DriversPage = () => {
       </PageHeader>
 
       <Card className="overflow-hidden">
-        <DataTable 
-          columns={columns} 
-          data={drivers} 
-          emptyMessage="No drivers found. Add your first driver to get started." 
+        <DataTable
+          columns={columns}
+          data={drivers}
+          emptyMessage="No drivers found. Add your first driver to get started."
         />
       </Card>
     </div>

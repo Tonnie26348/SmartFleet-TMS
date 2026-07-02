@@ -15,7 +15,10 @@ export const driverSchema = z.object({
 export const vehicleSchema = z.object({
   plate_number: z.string().min(3, "Invalid plate number"),
   model: z.string().min(2, "Model is required"),
-  capacity: z.coerce.number().min(1, "Capacity must be at least 1").max(100, "Capacity cannot exceed 100"),
+  capacity: z.coerce
+    .number()
+    .min(1, "Capacity must be at least 1")
+    .max(100, "Capacity cannot exceed 100"),
   status: z.enum(["available", "on_trip", "maintenance", "grounded"]),
 });
 

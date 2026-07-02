@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { PageHeader } from "@/components/page-header";
 import { Plus, Truck, Info } from "lucide-react";
@@ -59,11 +65,17 @@ export const VehicleManagementPage = () => {
       align: "right",
       accessor: (v) => (
         <div className="flex justify-end">
-          <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-            v.status === 'available' ? 'bg-green-100 text-green-700' : 
-            v.status === 'on_trip' ? 'bg-blue-100 text-blue-700' : 
-            v.status === 'maintenance' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-          }`}>
+          <span
+            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+              v.status === "available"
+                ? "bg-green-100 text-green-700"
+                : v.status === "on_trip"
+                  ? "bg-blue-100 text-blue-700"
+                  : v.status === "maintenance"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700"
+            }`}
+          >
             {v.status}
           </span>
         </div>
@@ -87,18 +99,19 @@ export const VehicleManagementPage = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-muted-foreground">Loading vehicles...</div>;
+  if (loading)
+    return <div className="p-8 text-center text-muted-foreground">Loading vehicles...</div>;
 
   return (
     <div className="p-8 space-y-6">
-      <PageHeader 
-        title="Vehicle Management" 
-        subtitle="Manage your transport fleet and capacity."
-      >
-        <Dialog open={isOpen} onOpenChange={(open) => {
-          setIsOpen(open);
-          if (!open) reset();
-        }}>
+      <PageHeader title="Vehicle Management" subtitle="Manage your transport fleet and capacity.">
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open) reset();
+          }}
+        >
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="h-4 w-4" /> Add Vehicle
@@ -111,34 +124,26 @@ export const VehicleManagementPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="plate_number">Plate Number</Label>
-                <Input 
-                  id="plate_number" 
-                  placeholder="KXX 000X"
-                  {...register("plate_number")} 
-                />
-                {errors.plate_number && <p className="text-xs text-destructive">{errors.plate_number.message}</p>}
+                <Input id="plate_number" placeholder="KXX 000X" {...register("plate_number")} />
+                {errors.plate_number && (
+                  <p className="text-xs text-destructive">{errors.plate_number.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="model">Model/Type</Label>
-                <Input 
-                  id="model" 
-                  placeholder="e.g. Isuzu NQR / 33 Seater"
-                  {...register("model")} 
-                />
+                <Input id="model" placeholder="e.g. Isuzu NQR / 33 Seater" {...register("model")} />
                 {errors.model && <p className="text-xs text-destructive">{errors.model.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="capacity">Passenger Capacity</Label>
-                <Input 
-                  id="capacity" 
-                  type="number" 
-                  {...register("capacity")} 
-                />
-                {errors.capacity && <p className="text-xs text-destructive">{errors.capacity.message}</p>}
+                <Input id="capacity" type="number" {...register("capacity")} />
+                {errors.capacity && (
+                  <p className="text-xs text-destructive">{errors.capacity.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="status">Initial Status</Label>
-                <select 
+                <select
                   id="status"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   {...register("status")}
@@ -148,7 +153,9 @@ export const VehicleManagementPage = () => {
                   <option value="maintenance">Maintenance</option>
                   <option value="grounded">Grounded</option>
                 </select>
-                {errors.status && <p className="text-xs text-destructive">{errors.status.message}</p>}
+                {errors.status && (
+                  <p className="text-xs text-destructive">{errors.status.message}</p>
+                )}
               </div>
               <Button type="submit" className="w-full" disabled={isAdding}>
                 {isAdding ? "Adding..." : "Save Vehicle"}
@@ -159,10 +166,10 @@ export const VehicleManagementPage = () => {
       </PageHeader>
 
       <Card className="overflow-hidden">
-        <DataTable 
-          columns={columns} 
-          data={vehicles} 
-          emptyMessage="No vehicles found. Add your first vehicle to start scheduling trips." 
+        <DataTable
+          columns={columns}
+          data={vehicles}
+          emptyMessage="No vehicles found. Add your first vehicle to start scheduling trips."
         />
       </Card>
     </div>

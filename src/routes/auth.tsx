@@ -102,7 +102,7 @@ function AuthPage() {
   async function handleForgotPassword() {
     const email = signInForm.getValues("email");
     if (!email) return toast.error("Please enter your email address first");
-    
+
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/app`,
@@ -159,8 +159,8 @@ function AuthPage() {
                     )}
                   />
                   <div className="flex justify-end">
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={handleForgotPassword}
                       className="text-xs text-primary hover:underline"
                     >

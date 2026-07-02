@@ -3,10 +3,14 @@ export type DriverStatus = "available" | "on_trip" | "maintenance" | "grounded" 
 
 export interface Driver {
   id: string;
-  license_number: string;
+  license_no: string;
   license_expiry: string;
   status: DriverStatus;
   created_at: string;
+  profiles?: {
+    full_name: string | null;
+    phone: string | null;
+  };
 }
 
 // Route Management
