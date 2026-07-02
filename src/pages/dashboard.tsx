@@ -5,7 +5,15 @@ import { useVehicles } from "@/hooks/use-vehicles";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Bus, Users, MapPin, Calendar, ArrowUpRight, TrendingUp, AlertCircle } from "lucide-react";
+import {
+  Bus,
+  Users,
+  MapPin,
+  CalendarDays,
+  ArrowUpRight,
+  TrendingUp,
+  AlertCircle,
+} from "lucide-react";
 
 export const TMSDashboard = () => {
   const { drivers } = useDrivers();
@@ -41,7 +49,7 @@ export const TMSDashboard = () => {
     {
       label: "Upcoming Trips",
       value: trips.length,
-      icon: Calendar,
+      icon: CalendarDays,
       color: "text-orange-600",
       bg: "bg-orange-50",
       link: "/app/trips",

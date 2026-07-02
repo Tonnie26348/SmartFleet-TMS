@@ -11,8 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
+import { Route as BookingsCodeRouteImport } from './routes/bookings.$code'
+import { Route as AppVehiclesRouteImport } from './routes/app.vehicles'
+import { Route as AppTripsRouteImport } from './routes/app.trips'
+import { Route as AppRoutesRouteImport } from './routes/app.routes'
+import { Route as AppDriversRouteImport } from './routes/app.drivers'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -24,48 +31,138 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const TripsTripIdRoute = TripsTripIdRouteImport.update({
   id: '/trips/$tripId',
   path: '/trips/$tripId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingsCodeRoute = BookingsCodeRouteImport.update({
+  id: '/bookings/$code',
+  path: '/bookings/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppVehiclesRoute = AppVehiclesRouteImport.update({
+  id: '/vehicles',
+  path: '/vehicles',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTripsRoute = AppTripsRouteImport.update({
+  id: '/trips',
+  path: '/trips',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRoutesRoute = AppRoutesRouteImport.update({
+  id: '/routes',
+  path: '/routes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDriversRoute = AppDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/app/drivers': typeof AppDriversRoute
+  '/app/routes': typeof AppRoutesRoute
+  '/app/trips': typeof AppTripsRoute
+  '/app/vehicles': typeof AppVehiclesRoute
+  '/bookings/$code': typeof BookingsCodeRoute
   '/trips/$tripId': typeof TripsTripIdRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/app/drivers': typeof AppDriversRoute
+  '/app/routes': typeof AppRoutesRoute
+  '/app/trips': typeof AppTripsRoute
+  '/app/vehicles': typeof AppVehiclesRoute
+  '/bookings/$code': typeof BookingsCodeRoute
   '/trips/$tripId': typeof TripsTripIdRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
+  '/app/drivers': typeof AppDriversRoute
+  '/app/routes': typeof AppRoutesRoute
+  '/app/trips': typeof AppTripsRoute
+  '/app/vehicles': typeof AppVehiclesRoute
+  '/bookings/$code': typeof BookingsCodeRoute
   '/trips/$tripId': typeof TripsTripIdRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/search' | '/trips/$tripId'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/search'
+    | '/app/drivers'
+    | '/app/routes'
+    | '/app/trips'
+    | '/app/vehicles'
+    | '/bookings/$code'
+    | '/trips/$tripId'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/search' | '/trips/$tripId'
-  id: '__root__' | '/' | '/auth' | '/search' | '/trips/$tripId'
+  to:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/app/drivers'
+    | '/app/routes'
+    | '/app/trips'
+    | '/app/vehicles'
+    | '/bookings/$code'
+    | '/trips/$tripId'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/search'
+    | '/app/drivers'
+    | '/app/routes'
+    | '/app/trips'
+    | '/app/vehicles'
+    | '/bookings/$code'
+    | '/trips/$tripId'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   SearchRoute: typeof SearchRoute
+  BookingsCodeRoute: typeof BookingsCodeRoute
   TripsTripIdRoute: typeof TripsTripIdRoute
 }
 
@@ -85,12 +182,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/trips/$tripId': {
       id: '/trips/$tripId'
@@ -99,13 +210,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TripsTripIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bookings/$code': {
+      id: '/bookings/$code'
+      path: '/bookings/$code'
+      fullPath: '/bookings/$code'
+      preLoaderRoute: typeof BookingsCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/vehicles': {
+      id: '/app/vehicles'
+      path: '/vehicles'
+      fullPath: '/app/vehicles'
+      preLoaderRoute: typeof AppVehiclesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/trips': {
+      id: '/app/trips'
+      path: '/trips'
+      fullPath: '/app/trips'
+      preLoaderRoute: typeof AppTripsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/routes': {
+      id: '/app/routes'
+      path: '/routes'
+      fullPath: '/app/routes'
+      preLoaderRoute: typeof AppRoutesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/drivers': {
+      id: '/app/drivers'
+      path: '/drivers'
+      fullPath: '/app/drivers'
+      preLoaderRoute: typeof AppDriversRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDriversRoute: typeof AppDriversRoute
+  AppRoutesRoute: typeof AppRoutesRoute
+  AppTripsRoute: typeof AppTripsRoute
+  AppVehiclesRoute: typeof AppVehiclesRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDriversRoute: AppDriversRoute,
+  AppRoutesRoute: AppRoutesRoute,
+  AppTripsRoute: AppTripsRoute,
+  AppVehiclesRoute: AppVehiclesRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   SearchRoute: SearchRoute,
+  BookingsCodeRoute: BookingsCodeRoute,
   TripsTripIdRoute: TripsTripIdRoute,
 }
 export const routeTree = rootRouteImport

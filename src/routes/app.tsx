@@ -1,6 +1,15 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
-import { Bus, LayoutDashboard, Car, LogOut, Settings, Users } from "lucide-react";
+import {
+  Bus,
+  LayoutDashboard,
+  Car,
+  LogOut,
+  Settings,
+  Users,
+  CalendarDays,
+  Navigation,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app")({
@@ -59,7 +68,7 @@ function AppLayout() {
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link to="/app/trips">
-              <Calendar className="h-4 w-4" /> Trips
+              <CalendarDays className="h-4 w-4" /> Trips
             </Link>
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
