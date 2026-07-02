@@ -104,7 +104,7 @@ function AppLayout() {
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{user.email}</span>
             <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">
-              {user.email[0].toUpperCase()}
+              {user.email ? user.email[0].toUpperCase() : "?"}
             </div>
           </div>
         </header>

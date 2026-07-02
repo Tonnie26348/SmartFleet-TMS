@@ -46,7 +46,7 @@ export const DriversPage = () => {
       accessor: (driver) => (
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-            {(driver.profiles?.full_name || "D")[0].toUpperCase()}
+            {((driver.profiles?.full_name || "D")[0] || "D").toUpperCase()}
           </div>
           {driver.profiles?.full_name || "Unknown Driver"}
         </div>
