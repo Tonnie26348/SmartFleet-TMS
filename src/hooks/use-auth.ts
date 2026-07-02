@@ -37,7 +37,25 @@ export const useAuth = () => {
         .eq('id', userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // No profile found, create a default one
+          const { data: newProfile, error: createError } = await supabase
+            .from('users')
+            .insert({
+              id: userId,
+              email: (await supabase.auth.getUser()).data.user?.email || 'unknown',
+              role: 'passenger', // Default role
+            })
+            .select()
+            .single();
+
+          if (createError) throw createError;
+          setUser(newProfile);
+          return;
+        }
+        throw error;
+      }
       setUser(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -45,6 +63,7 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
+
 
   return { user, loading };
 };
