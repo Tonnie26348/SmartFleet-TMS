@@ -53,6 +53,16 @@ function AppLayout() {
             </Link>
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link to="/app/routes">
+              <Navigation className="h-4 w-4" /> Routes
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link to="/app/trips">
+              <Calendar className="h-4 w-4" /> Trips
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link to="/app/drivers">
               <Users className="h-4 w-4" /> Drivers
             </Link>
