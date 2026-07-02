@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { PageHeader } from "@/components/page-header";
-import { Calendar, Clock, Plus, MapPin, Bus, User } from "lucide-react";
+import { CalendarDays, Clock, Plus, MapPin, Bus, User } from "lucide-react";
+
 import { toast } from "sonner";
 import { formatDateTime } from "@/lib/format";
 import { Trip } from "@/types/trip";

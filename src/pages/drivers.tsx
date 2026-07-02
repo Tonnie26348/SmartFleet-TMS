@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { DataTable, Column } from "@/components/ui/data-table";
 import { PageHeader } from "@/components/page-header";
-import { UserPlus, Phone, FileText, Calendar, BadgeCheck } from "lucide-react";
+import { UserPlus, Phone, FileText, CalendarDays, BadgeCheck } from "lucide-react";
+
 import { toast } from "sonner";
 import { Driver } from "@/types/driver";
 import { driverSchema, DriverFormValues } from "@/lib/validations";
@@ -71,7 +72,7 @@ export const DriversPage = () => {
       header: "Expiry",
       accessor: (driver) => (
         <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Calendar className="h-3 w-3" /> {driver.license_expiry}
+          <CalendarDays className="h-3 w-3" /> {driver.license_expiry}
         </div>
       ),
     },
