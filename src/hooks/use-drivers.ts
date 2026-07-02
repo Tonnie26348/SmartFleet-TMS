@@ -5,13 +5,7 @@ import { Driver } from "@/types/driver";
 export const driversQO = queryOptions({
   queryKey: ["drivers"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("drivers").select(`
-        *,
-        profiles (
-          full_name,
-          phone
-        )
-      `);
+    const { data, error } = await supabase.from("drivers").select(`*`);
     if (error) throw error;
     return (data ?? []) as any[];
   },
