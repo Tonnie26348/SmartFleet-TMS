@@ -10,6 +10,17 @@ import { SeatMap } from "@/components/seat-map";
 import { ArrowLeft, Bus, Clock, Loader2, MapPin, Smartphone } from "lucide-react";
 import { formatDateTime, formatKES, normalizeKenyanPhone } from "@/lib/format";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 export const Route = createFileRoute("/trips/$tripId")({
   head: () => ({
@@ -20,6 +31,14 @@ export const Route = createFileRoute("/trips/$tripId")({
   }),
   component: TripPage,
 });
+
+const paymentSchema = z.object({
+  phone: z.string().refine((val) => !!normalizeKenyanPhone(val), {
+    message: "Enter a valid Kenyan phone number (e.g., 07xx xxx xxx)",
+  }),
+});
+
+type PaymentValues = z.infer<typeof paymentSchema>;
 
 type Trip = {
   id: string;
@@ -34,8 +53,12 @@ function TripPage() {
   const { tripId } = useParams({ from: "/trips/$tripId" });
   const navigate = useNavigate();
   const [selected, setSelected] = useState<number[]>([]);
-  const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const form = useForm<PaymentValues>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: { phone: "" },
+  });
 
   const { data: trip } = useQuery({
     queryKey: ["trip", tripId],
@@ -85,13 +108,17 @@ function TripPage() {
         .select("phone")
         .eq("id", data.user.id)
         .maybeSingle();
-      if (p?.phone) setPhone(p.phone);
+      if (p?.phone) form.setValue("phone", p.phone);
     });
-  }, []);
+  }, [form]);
 
   const total = trip ? Number(trip.base_fare) * selected.length : 0;
 
   async function handleBook() {
+    const { phone: phoneValue } = form.getValues();
+    const isValid = await form.trigger("phone");
+    if (!isValid) return;
+
     if (!trip) return;
     const { data: session } = await supabase.auth.getUser();
     if (!session.user) {
@@ -100,7 +127,7 @@ function TripPage() {
       return;
     }
     if (selected.length === 0) return toast.error("Pick at least one seat");
-    const normalized = normalizeKenyanPhone(phone);
+    const normalized = normalizeKenyanPhone(phoneValue);
     if (!normalized) return toast.error("Enter a valid Kenyan phone number");
 
     setSubmitting(true);
@@ -150,7 +177,7 @@ function TripPage() {
           <Link to="/" className="flex items-center gap-2">
             <div className="grid h-9 w-9 place-items-center rounded-lg gradient-hero text-primary-foreground">
               <Bus className="h-5 w-5" />
-            </div>
+            }
             <span className="text-lg font-bold">SafariGo</span>
           </Link>
           <Button asChild variant="ghost" size="sm">
@@ -212,20 +239,26 @@ function TripPage() {
               />
             </div>
 
-            <div className="mt-5 space-y-1.5">
-              <Label htmlFor="phone" className="flex items-center gap-1.5">
-                <Smartphone className="h-4 w-4" /> M-Pesa phone
-              </Label>
-              <Input
-                id="phone"
-                placeholder="07xx xxx xxx"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+            <Form {...form}>
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem className="mt-5">
+                    <FormLabel className="flex items-center gap-1.5">
+                      <Smartphone className="h-4 w-4" /> M-Pesa phone
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="07xx xxx xxx"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <p className="text-xs text-muted-foreground">
-                You'll receive an STK Push to enter your PIN.
-              </p>
-            </div>
+            </Form>
 
             <Button
               onClick={handleBook}
