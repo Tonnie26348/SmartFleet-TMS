@@ -18,6 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Logo } from "@/components/logo";
 import { normalizeKenyanPhone } from "@/lib/format";
 
@@ -38,6 +45,7 @@ const signUpSchema = z.object({
   }),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["passenger", "driver", "ops_manager", "accountant", "super_admin"]),
 });
 
 type SignInValues = z.infer<typeof signInSchema>;
@@ -67,7 +75,7 @@ function AuthPage() {
 
   const signUpForm = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { fullName: "", phone: "", email: "", password: "" },
+    defaultValues: { fullName: "", phone: "", email: "", password: "", role: "passenger" },
   });
 
   async function handleSignIn(values: SignInValues) {
@@ -90,7 +98,11 @@ function AuthPage() {
       password: values.password,
       options: {
         emailRedirectTo: `${window.location.origin}/app`,
-        data: { full_name: values.fullName, phone: normalizedPhone },
+        data: {
+          full_name: values.fullName,
+          phone: normalizedPhone,
+          role: values.role,
+        },
       },
     });
     setLoading(false);
@@ -226,6 +238,30 @@ function AuthPage() {
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={signUpForm.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>I am a...</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="passenger">Passenger</SelectItem>
+                            <SelectItem value="driver">Driver</SelectItem>
+                            <SelectItem value="ops_manager">Operations Manager</SelectItem>
+                            <SelectItem value="accountant">Accountant</SelectItem>
+                            <SelectItem value="super_admin">System Administrator</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

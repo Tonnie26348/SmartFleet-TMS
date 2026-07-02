@@ -20,6 +20,21 @@ function AppLayout() {
   const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!loading && user) {
+      // Redirect to specific dashboard based on role if we are at the root /app
+      if (window.location.pathname === "/app") {
+        if (user.role === "driver") {
+          navigate({ to: "/app/drivers" });
+        } else if (user.role === "super_admin" || user.role === "ops_manager") {
+          navigate({ to: "/app" }); // Admin stays on dashboard
+        } else {
+          navigate({ to: "/app" }); // Passengers stay on dashboard
+        }
+      }
+    }
+  }, [user, loading, navigate]);
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -56,26 +71,44 @@ function AppLayout() {
               <LayoutDashboard className="h-4 w-4" /> Dashboard
             </Link>
           </Button>
-          <Button asChild variant="ghost" className="w-full justify-start gap-2">
-            <Link to="/app/vehicles">
-              <Car className="h-4 w-4" /> Vehicles
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="w-full justify-start gap-2">
-            <Link to="/app/routes">
-              <Navigation className="h-4 w-4" /> Routes
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="w-full justify-start gap-2">
-            <Link to="/app/trips">
-              <CalendarDays className="h-4 w-4" /> Trips
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="w-full justify-start gap-2">
-            <Link to="/app/drivers">
-              <Users className="h-4 w-4" /> Drivers
-            </Link>
-          </Button>
+
+          {/* Admin/Staff Only Links */}
+          {(user.role === "super_admin" ||
+            user.role === "ops_manager" ||
+            user.role === "accountant") && (
+            <>
+              <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                <Link to="/app/vehicles">
+                  <Car className="h-4 w-4" /> Vehicles
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                <Link to="/app/routes">
+                  <Navigation className="h-4 w-4" /> Routes
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                <Link to="/app/trips">
+                  <CalendarDays className="h-4 w-4" /> Trips
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                <Link to="/app/drivers">
+                  <Users className="h-4 w-4" /> Drivers
+                </Link>
+              </Button>
+            </>
+          )}
+
+          {/* Driver Only Link (or Admin) */}
+          {(user.role === "driver" || user.role === "super_admin") && (
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link to="/app/drivers">
+                <Users className="h-4 w-4" /> My Profile
+              </Link>
+            </Button>
+          )}
+
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link to="/app/settings">
               <Settings className="h-4 w-4" /> Settings
