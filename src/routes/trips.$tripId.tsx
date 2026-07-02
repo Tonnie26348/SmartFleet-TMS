@@ -121,20 +121,17 @@ function TripPage() {
 
     const b = booking[0] as { booking_id: string; booking_code: string; total: number };
 
-    // 2. Trigger M-Pesa STK Push
+    // 2. Trigger M-Pesa STK Push via Edge Function
     try {
-      const res = await fetch("/api/public/mpesa/stk-push", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          booking_id: b.booking_id,
-          phone: normalized,
-          amount: Number(b.total),
-        }),
+      const { processPayment } = await import("@/utils/integrations-api");
+      const res = await processPayment({
+        booking_id: b.booking_id,
+        amount: Number(b.total),
+        method: "mpesa",
       });
-      const json = await res.json();
-      if (!res.ok || json.error) throw new Error(json.error ?? "M-Pesa failed");
-      toast.success("Check your phone and enter your M-Pesa PIN");
+
+      if (res.error) throw new Error(res.error);
+      toast.success("Payment initiated. Check your phone for the M-Pesa PIN prompt.");
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       toast.error(`Payment prompt failed: ${msg}`);

@@ -2,15 +2,19 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { UserProfile } from "@/types/user";
 
+export type UserWithRole = UserProfile & {
+  role: string;
+};
+
 export const useAuth = () => {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<UserWithRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        fetchProfile(session.user.id);
+        fetchProfileAndRole(session.user.id);
       } else {
         setLoading(false);
       }
@@ -21,7 +25,7 @@ export const useAuth = () => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        fetchProfile(session.user.id);
+        fetchProfileAndRole(session.user.id);
       } else {
         setUser(null);
         setLoading(false);
@@ -31,32 +35,25 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfileAndRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase.from("users").select("*").eq("id", userId).single();
+      // Fetch profile and role in parallel
+      const [profileRes, roleRes] = await Promise.all([
+        supabase.from("profiles").select("*").eq("id", userId).single(),
+        supabase.from("user_roles").select("role").eq("user_id", userId).single(),
+      ]);
 
-      if (error) {
-        if (error.code === "PGRST116") {
-          // No profile found, create a default one
-          const { data: newProfile, error: createError } = await supabase
-            .from("users")
-            .insert({
-              id: userId,
-              email: (await supabase.auth.getUser()).data.user?.email || "unknown",
-              role: "passenger", // Default role
-            })
-            .select()
-            .single();
+      if (profileRes.error) throw profileRes.error;
+      if (roleRes.error) throw roleRes.error;
 
-          if (createError) throw createError;
-          setUser(newProfile);
-          return;
-        }
-        throw error;
-      }
-      setUser(data);
+      setUser({
+        ...profileRes.data,
+        role: roleRes.data.role,
+      });
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Error fetching profile and role:", error);
+      // If profile is missing, we don't insert here; the DB trigger handles it.
+      // We just set loading to false so the app can redirect to login/signup.
     } finally {
       setLoading(false);
     }
