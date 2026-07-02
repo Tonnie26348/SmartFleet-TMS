@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,7 @@ type Trip = {
 function TripPage() {
   const { tripId } = useParams({ from: "/trips/$tripId" });
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState<number[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -85,8 +86,30 @@ function TripPage() {
       if (error) return [];
       return data ?? [];
     },
-    refetchInterval: 8000,
   });
+
+  // Realtime subscription for seat updates
+  useEffect(() => {
+    const channel = supabase
+      .channel(`trip-bookings-${tripId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookings",
+          filter: `trip_id=eq.${tripId}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["trip-bookings", tripId] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [tripId, queryClient]);
 
   const taken = useMemo(() => {
     const now = new Date();
@@ -174,10 +197,10 @@ function TripPage() {
     <div className="min-h-screen bg-secondary/30">
       <header className="border-b border-border bg-background">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" aria-label="Go to home page">
             <div className="grid h-9 w-9 place-items-center rounded-lg gradient-hero text-primary-foreground">
               <Bus className="h-5 w-5" />
-            }
+            </div>
             <span className="text-lg font-bold">SafariGo</span>
           </Link>
           <Button asChild variant="ghost" size="sm">
@@ -188,6 +211,7 @@ function TripPage() {
                 to: trip.route.destination,
                 date: trip.departure_at.slice(0, 10),
               }}
+              aria-label="Back to search results"
             >
               <ArrowLeft className="h-4 w-4" /> Back to results
             </Link>
@@ -215,14 +239,27 @@ function TripPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <SeatMap
-            capacity={trip.vehicle.capacity}
-            taken={taken}
-            selected={selected}
-            onToggle={(s) =>
-              setSelected((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]))
+          <div className="relative">
+            <SeatMap
+              capacity={trip.vehicle.capacity}
+              taken={taken}
+              selected={selected}
+              onToggle={(s) =>
+                setSelected((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]))
             }
-          />
+            />
+            <div className="mt-4 flex justify-center gap-6 text-xs text-muted-foreground" aria-hidden="true">
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded-sm bg-muted" /> Available
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded-sm bg-destructive" /> Taken
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 rounded-sm bg-primary" /> Selected
+              </div>
+            </div>
+          </div>
 
           <Card className="h-fit p-6 shadow-card lg:sticky lg:top-6">
             <h2 className="font-semibold">Trip summary</h2>
@@ -252,6 +289,7 @@ function TripPage() {
                       <Input
                         placeholder="07xx xxx xxx"
                         {...field}
+                        aria-required="true"
                       />
                     </FormControl>
                     <FormMessage />

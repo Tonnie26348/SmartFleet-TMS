@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const tripSchema = z.object({
   route_id: z.string().min(1, "Please select a route"),
@@ -130,34 +131,35 @@ export const TripsPage = () => {
         title="Trip Scheduling" 
         subtitle="Assign vehicles and drivers to defined routes."
       >
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> Schedule Trip
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>New Trip Schedule</DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleScheduleTrip)} className="space-y-4 py-4">
-                <FormField
-                  control={form.control}
-                  name="route_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select Route</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Choose a route..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {routes.map(r => (
-                              <SelectItem key={r.id} value={r.id}>
-                                {r.name} ({r.origin} → {r.destination})
-                              </SelectItem>
+        <ErrorBoundary onReset={() => window.location.reload()}>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" /> Schedule Trip
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>New Trip Schedule</DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleScheduleTrip)} className="space-y-4 py-4">
+                  <FormField
+                    control={form.control}
+                    name="route_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Select Route</FormLabel>
+                        <FormControl>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Choose a route..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {routes.map(r => (
+                                <SelectItem key={r.id} value={r.id}>
+                                  {r.name} ({r.origin} → {r.destination})
+                                </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -255,23 +257,24 @@ export const TripsPage = () => {
             </Form>
           </DialogContent>
         </Dialog>
-      </PageHeader>
-
+      </ErrorBoundary>
       <Card className="overflow-hidden">
-        {isLoading ? (
-          <div className="p-8 space-y-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-24 w-full" />
-          </div>
-        ) : (
-          <DataTable 
-            columns={columns} 
-            data={trips} 
-            emptyMessage="No trips scheduled. Start by adding your first trip." 
-          />
-        )}
+        <ErrorBoundary onReset={() => window.location.reload()}>
+          {isLoading ? (
+            <div className="p-8 space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          ) : (
+            <DataTable 
+              columns={columns} 
+              data={trips} 
+              emptyMessage="No trips scheduled. Start by adding your first trip." 
+            />
+          )}
+        </ErrorBoundary>
       </Card>
     </div>
   );
