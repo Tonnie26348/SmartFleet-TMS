@@ -12,4 +12,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  nitro: {
+    // Netlify's own build settings (not this repo's config) publish "dist/client".
+    // Nitro auto-detects the Netlify environment and switches to its "netlify"
+    // preset, whose default publicDir is just "dist" — pin it back to
+    // "dist/client" so the client build lands where Netlify expects it.
+    output: { publicDir: "dist/client" },
+  },
 });
