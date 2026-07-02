@@ -18,6 +18,7 @@ import { Route as TripsTripIdRouteImport } from './routes/trips.$tripId'
 import { Route as BookingsCodeRouteImport } from './routes/bookings.$code'
 import { Route as AppVehiclesRouteImport } from './routes/app.vehicles'
 import { Route as AppTripsRouteImport } from './routes/app.trips'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppRoutesRouteImport } from './routes/app.routes'
 import { Route as AppDriversRouteImport } from './routes/app.drivers'
 
@@ -66,6 +67,11 @@ const AppTripsRoute = AppTripsRouteImport.update({
   path: '/trips',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRoutesRoute = AppRoutesRouteImport.update({
   id: '/routes',
   path: '/routes',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
   '/app/routes': typeof AppRoutesRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
   '/app/vehicles': typeof AppVehiclesRoute
   '/bookings/$code': typeof BookingsCodeRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
   '/app/routes': typeof AppRoutesRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
   '/app/vehicles': typeof AppVehiclesRoute
   '/bookings/$code': typeof BookingsCodeRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
   '/app/routes': typeof AppRoutesRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
   '/app/vehicles': typeof AppVehiclesRoute
   '/bookings/$code': typeof BookingsCodeRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/app/drivers'
     | '/app/routes'
+    | '/app/settings'
     | '/app/trips'
     | '/app/vehicles'
     | '/bookings/$code'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/app/drivers'
     | '/app/routes'
+    | '/app/settings'
     | '/app/trips'
     | '/app/vehicles'
     | '/bookings/$code'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/app/drivers'
     | '/app/routes'
+    | '/app/settings'
     | '/app/trips'
     | '/app/vehicles'
     | '/bookings/$code'
@@ -231,6 +243,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTripsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/routes': {
       id: '/app/routes'
       path: '/routes'
@@ -251,6 +270,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppDriversRoute: typeof AppDriversRoute
   AppRoutesRoute: typeof AppRoutesRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppTripsRoute: typeof AppTripsRoute
   AppVehiclesRoute: typeof AppVehiclesRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -259,6 +279,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppDriversRoute: AppDriversRoute,
   AppRoutesRoute: AppRoutesRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppTripsRoute: AppTripsRoute,
   AppVehiclesRoute: AppVehiclesRoute,
   AppIndexRoute: AppIndexRoute,
