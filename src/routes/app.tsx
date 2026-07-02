@@ -8,11 +8,22 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="text-sm text-muted-foreground">Loading your account...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
-    return <div className="flex h-screen items-center justify-center">Redirecting to login...</div>;
+    return <div className="flex h-screen items-center justify-center bg-background">Redirecting to login...</div>;
   }
 
   return (
