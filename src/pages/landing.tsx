@@ -87,8 +87,8 @@ export function LandingPage() {
             initial={{ scale: 1 }}
             animate={{ scale: 1.1 }}
             transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
-            src="https://images.unsplash.com/photo-1544620347-c4776705c976?auto=format&fit=crop&q=80&w=2000" 
-            alt="Luxury Bus Interior" 
+            src="/bg-landing.jpg" 
+            alt="Modern Luxury Bus" 
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40" />
