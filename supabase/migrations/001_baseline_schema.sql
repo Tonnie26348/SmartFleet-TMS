@@ -1,4 +1,3 @@
-
 -- =========== ENUMS ===========
 CREATE TYPE public.app_role AS ENUM ('super_admin','ops_manager','accountant','driver','passenger');
 CREATE TYPE public.vehicle_status AS ENUM ('available','on_trip','maintenance','grounded');
@@ -186,6 +185,24 @@ CREATE POLICY "trips public read" ON public.trips FOR SELECT TO anon, authentica
 CREATE POLICY "trips staff write" ON public.trips FOR INSERT TO authenticated WITH CHECK (public.is_staff(auth.uid()));
 CREATE POLICY "trips staff update" ON public.trips FOR UPDATE TO authenticated
   USING (public.is_staff(auth.uid()) OR (driver_id IS NOT NULL AND EXISTS (SELECT 1 FROM public.drivers d WHERE d.id = trips.driver_id AND d.user_id = auth.uid())));
+CREATE POLICY "trips staff delete" ON public.trips NOT NULL REFERENCES public.routes(id) ON DELETE RESTRICT,
+  vehicle_id UUID NOT NULL REFERENCES public.vehicles(id) ON DELETE RESTRICT,
+  driver_id UUID REFERENCES public.drivers(id) ON DELETE SET NULL,
+  departure_at TIMESTAMPTZ NOT NULL,
+  arrival_at TIMESTAMPTZ,
+  base_fare NUMERIC(10,2) NOT NULL CHECK (base_fare >= 0),
+  status public.trip_status NOT NULL DEFAULT 'scheduled',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.trips TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.trips TO authenticated;
+GRANT ALL ON public.trips TO service_role;
+ALTER TABLE public.trips ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "trips public read" ON public.trips FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "trips staff write" ON public.trips FOR INSERT TO authenticated WITH CHECK (public.is_staff(auth.uid()));
+CREATE POLICY "trips staff update" ON public.trips FOR UPDATE TO authenticated
+  USING (public.is_staff(auth.uid()) OR (driver_id IS NOT NULL AND EXISTS (SELECT 1 FROM public.drivers d WHERE d.id = trips.driver_id AND d.user_id = auth.uid())));
 CREATE POLICY "trips staff delete" ON public.trips FOR DELETE TO authenticated USING (public.is_staff(auth.uid()));
 CREATE TRIGGER trg_trips_updated BEFORE UPDATE ON public.trips FOR EACH ROW EXECUTE FUNCTION public.touch_updated_at();
 
@@ -299,7 +316,7 @@ CREATE TABLE public.payments (
 );
 CREATE INDEX idx_payments_booking ON public.payments(booking_id);
 CREATE INDEX idx_payments_checkout ON public.payments(mpesa_checkout_id);
-GRANT SELECT ON public.payments TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.payments TO authenticated;
 GRANT ALL ON public.payments TO service_role;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "payments own read" ON public.payments FOR SELECT TO authenticated USING (

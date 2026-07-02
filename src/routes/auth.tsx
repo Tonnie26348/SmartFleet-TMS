@@ -89,11 +89,23 @@ function AuthPage() {
               <form onSubmit={handleSignIn} className="mt-6 space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="si-email">Email</Label>
-                  <Input id="si-email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <Input
+                    id="si-email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="si-password">Password</Label>
-                  <Input id="si-password" type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                  <Input
+                    id="si-password"
+                    type="password"
+                    required
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -106,19 +118,43 @@ function AuthPage() {
               <form onSubmit={handleSignUp} className="mt-6 space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="su-name">Full name</Label>
-                  <Input id="su-name" required value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+                  <Input
+                    id="su-name"
+                    required
+                    value={form.fullName}
+                    onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="su-phone">Phone (M-Pesa)</Label>
-                  <Input id="su-phone" placeholder="+254 7xx xxx xxx" required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                  <Input
+                    id="su-phone"
+                    placeholder="+254 7xx xxx xxx"
+                    required
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="su-email">Email</Label>
-                  <Input id="su-email" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <Input
+                    id="su-email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="su-password">Password</Label>
-                  <Input id="su-password" type="password" required minLength={6} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                  <Input
+                    id="su-password"
+                    type="password"
+                    required
+                    minLength={6}
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="h-4 w-4 animate-spin" />}

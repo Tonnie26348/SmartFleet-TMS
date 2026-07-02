@@ -1,8 +1,14 @@
-import { ReactNode } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { Navigate } from 'react-router-dom';
+import { ReactNode } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { Navigate } from "react-router-dom";
 
-export const ProtectedRoute = ({ children, allowedRoles }: { children: ReactNode; allowedRoles?: string[] }) => {
+export const ProtectedRoute = ({
+  children,
+  allowedRoles,
+}: {
+  children: ReactNode;
+  allowedRoles?: string[];
+}) => {
   const { user, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;

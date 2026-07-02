@@ -1,5 +1,5 @@
 // Driver Management
-export type DriverStatus = 'available' | 'on_trip' | 'maintenance' | 'grounded' | 'inactive';
+export type DriverStatus = "available" | "on_trip" | "maintenance" | "grounded" | "inactive";
 
 export interface Driver {
   id: string;
@@ -20,7 +20,7 @@ export interface Route {
 }
 
 // Trip Scheduling
-export type TripStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled' | 'delayed';
+export type TripStatus = "scheduled" | "in_progress" | "completed" | "cancelled" | "delayed";
 
 export interface Trip {
   id: string;

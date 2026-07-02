@@ -1,35 +1,35 @@
-import { useState, useEffect } from 'react';
+import { queryOptions, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Vehicle } from "@/types/vehicle";
 
-export const useVehicles = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchVehicles();
-  }, []);
-
-  const fetchVehicles = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('vehicles')
-        .select('*');
-
-      if (error) throw error;
-      setVehicles(data as Vehicle[]);
-    } catch (error) {
-      console.error('Error fetching vehicles:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addVehicle = async (vehicle: Omit<Vehicle, 'id' | 'created_at'>) => {
-    const { error } = await supabase.from('vehicles').insert([vehicle]);
+export const vehiclesQO = queryOptions({
+  queryKey: ["vehicles"],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("vehicles").select("*");
     if (error) throw error;
-    fetchVehicles();
-  };
+    return (data ?? []) as Vehicle[];
+  },
+});
 
-  return { vehicles, loading, addVehicle };
+export const useVehicles = () => {
+  const queryClient = useQueryClient();
+  const query = useQuery(vehiclesQO);
+
+  const addVehicleMutation = useMutation({
+    mutationFn: async (vehicle: Omit<Vehicle, "id" | "created_at">) => {
+      const { error } = await supabase.from("vehicles").insert([vehicle]);
+      if (error) throw error;
+      return vehicle;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+    },
+  });
+
+  return {
+    vehicles: query.data ?? [],
+    loading: query.isLoading,
+    addVehicle: addVehicleMutation.mutateAsync,
+    isAdding: addVehicleMutation.isPending,
+  };
 };

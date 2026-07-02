@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { UserProfile } from "@/types/user";
 
@@ -17,7 +17,9 @@ export const useAuth = () => {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         fetchProfile(session.user.id);
       } else {
@@ -31,21 +33,17 @@ export const useAuth = () => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const { data, error } = await supabase.from("users").select("*").eq("id", userId).single();
 
       if (error) {
-        if (error.code === 'PGRST116') {
+        if (error.code === "PGRST116") {
           // No profile found, create a default one
           const { data: newProfile, error: createError } = await supabase
-            .from('users')
+            .from("users")
             .insert({
               id: userId,
-              email: (await supabase.auth.getUser()).data.user?.email || 'unknown',
-              role: 'passenger', // Default role
+              email: (await supabase.auth.getUser()).data.user?.email || "unknown",
+              role: "passenger", // Default role
             })
             .select()
             .single();
@@ -58,12 +56,11 @@ export const useAuth = () => {
       }
       setUser(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
     } finally {
       setLoading(false);
     }
   };
-
 
   return { user, loading };
 };

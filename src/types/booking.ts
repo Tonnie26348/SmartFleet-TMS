@@ -3,6 +3,6 @@ export interface Booking {
   trip_id: string;
   passenger_id: string;
   seat_number: string;
-  status: 'booked' | 'paid' | 'cancelled' | 'refunded';
+  status: "booked" | "paid" | "cancelled" | "refunded";
   created_at: string;
 }

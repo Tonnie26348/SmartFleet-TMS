@@ -42,7 +42,9 @@ function TripPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("trips")
-        .select("id, departure_at, base_fare, status, route:routes!inner(name,origin,destination,duration_min), vehicle:vehicles!inner(plate_no,model,capacity)")
+        .select(
+          "id, departure_at, base_fare, status, route:routes!inner(name,origin,destination,duration_min), vehicle:vehicles!inner(plate_no,model,capacity)",
+        )
         .eq("id", tripId)
         .maybeSingle();
       if (error) throw error;
@@ -67,7 +69,8 @@ function TripPage() {
     const now = new Date();
     const set = new Set<number>();
     for (const b of bookings ?? []) {
-      const active = b.status === "confirmed" || (b.status === "pending" && new Date(b.expires_at) > now);
+      const active =
+        b.status === "confirmed" || (b.status === "pending" && new Date(b.expires_at) > now);
       if (active) for (const s of b.seat_numbers ?? []) set.add(s);
     }
     return Array.from(set);
@@ -77,7 +80,11 @@ function TripPage() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
-      const { data: p } = await supabase.from("profiles").select("phone").eq("id", data.user.id).maybeSingle();
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("phone")
+        .eq("id", data.user.id)
+        .maybeSingle();
       if (p?.phone) setPhone(p.phone);
     });
   }, []);
@@ -106,7 +113,8 @@ function TripPage() {
     if (error || !booking?.[0]) {
       setSubmitting(false);
       const msg = error?.message ?? "Booking failed";
-      if (msg.includes("SEAT_TAKEN")) return toast.error("One of those seats was just taken. Please choose others.");
+      if (msg.includes("SEAT_TAKEN"))
+        return toast.error("One of those seats was just taken. Please choose others.");
       if (msg.includes("TRIP_UNAVAILABLE")) return toast.error("This trip is no longer available.");
       return toast.error(msg);
     }
@@ -118,7 +126,11 @@ function TripPage() {
       const res = await fetch("/api/public/mpesa/stk-push", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: b.booking_id, phone: normalized, amount: Number(b.total) }),
+        body: JSON.stringify({
+          booking_id: b.booking_id,
+          phone: normalized,
+          amount: Number(b.total),
+        }),
       });
       const json = await res.json();
       if (!res.ok || json.error) throw new Error(json.error ?? "M-Pesa failed");
@@ -145,7 +157,14 @@ function TripPage() {
             <span className="text-lg font-bold">SafariGo</span>
           </Link>
           <Button asChild variant="ghost" size="sm">
-            <Link to="/search" search={{ from: trip.route.origin, to: trip.route.destination, date: trip.departure_at.slice(0, 10) }}>
+            <Link
+              to="/search"
+              search={{
+                from: trip.route.origin,
+                to: trip.route.destination,
+                date: trip.departure_at.slice(0, 10),
+              }}
+            >
               <ArrowLeft className="h-4 w-4" /> Back to results
             </Link>
           </Button>
@@ -161,34 +180,62 @@ function TripPage() {
             {trip.route.origin} → {trip.route.destination}
           </h1>
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {formatDateTime(trip.departure_at)}</span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-4 w-4" /> {formatDateTime(trip.departure_at)}
+            </span>
             <span>·</span>
-            <span>{trip.vehicle.model} · <span className="text-mono">{trip.vehicle.plate_no}</span></span>
+            <span>
+              {trip.vehicle.model} · <span className="text-mono">{trip.vehicle.plate_no}</span>
+            </span>
           </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <SeatMap capacity={trip.vehicle.capacity} taken={taken} selected={selected}
-            onToggle={(s) => setSelected((cur) => cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s])} />
+          <SeatMap
+            capacity={trip.vehicle.capacity}
+            taken={taken}
+            selected={selected}
+            onToggle={(s) =>
+              setSelected((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]))
+            }
+          />
 
           <Card className="h-fit p-6 shadow-card lg:sticky lg:top-6">
             <h2 className="font-semibold">Trip summary</h2>
             <div className="mt-4 space-y-2 text-sm">
               <Row label="Fare per seat" value={formatKES(trip.base_fare)} />
-              <Row label="Selected seats" value={selected.length ? selected.sort((a, b) => a - b).join(", ") : "None"} />
+              <Row
+                label="Selected seats"
+                value={selected.length ? selected.sort((a, b) => a - b).join(", ") : "None"}
+              />
               <div className="my-3 border-t border-border" />
-              <Row label={<span className="font-semibold">Total</span>} value={<span className="text-lg font-bold text-primary">{formatKES(total)}</span>} />
+              <Row
+                label={<span className="font-semibold">Total</span>}
+                value={<span className="text-lg font-bold text-primary">{formatKES(total)}</span>}
+              />
             </div>
 
             <div className="mt-5 space-y-1.5">
               <Label htmlFor="phone" className="flex items-center gap-1.5">
                 <Smartphone className="h-4 w-4" /> M-Pesa phone
               </Label>
-              <Input id="phone" placeholder="07xx xxx xxx" value={phone} onChange={(e) => setPhone(e.target.value)} />
-              <p className="text-xs text-muted-foreground">You'll receive an STK Push to enter your PIN.</p>
+              <Input
+                id="phone"
+                placeholder="07xx xxx xxx"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                You'll receive an STK Push to enter your PIN.
+              </p>
             </div>
 
-            <Button onClick={handleBook} disabled={selected.length === 0 || submitting} className="mt-5 w-full gap-2" size="lg">
+            <Button
+              onClick={handleBook}
+              disabled={selected.length === 0 || submitting}
+              className="mt-5 w-full gap-2"
+              size="lg"
+            >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               Pay {formatKES(total)} with M-Pesa
             </Button>

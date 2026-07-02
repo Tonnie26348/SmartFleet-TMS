@@ -1,6 +1,10 @@
 export function formatKES(n: number | string) {
   const v = typeof n === "string" ? Number(n) : n;
-  return new Intl.NumberFormat("en-KE", { style: "currency", currency: "KES", maximumFractionDigits: 0 }).format(v);
+  return new Intl.NumberFormat("en-KE", {
+    style: "currency",
+    currency: "KES",
+    maximumFractionDigits: 0,
+  }).format(v);
 }
 
 export function formatDateTime(iso: string) {

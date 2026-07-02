@@ -1,4 +1,4 @@
-export type VehicleStatus = 'available' | 'on_trip' | 'maintenance' | 'grounded';
+export type VehicleStatus = "available" | "on_trip" | "maintenance" | "grounded";
 
 export interface Vehicle {
   id: string;

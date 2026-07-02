@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const AuthPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -18,7 +18,7 @@ export const AuthPage = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleAuth} className="p-8 border rounded shadow-md w-96">
-        <h2 className="text-xl mb-4">{isLogin ? 'Login' : 'Register'}</h2>
+        <h2 className="text-xl mb-4">{isLogin ? "Login" : "Register"}</h2>
         <input
           type="email"
           placeholder="Email"
@@ -34,14 +34,14 @@ export const AuthPage = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          {isLogin ? 'Login' : 'Register'}
+          {isLogin ? "Login" : "Register"}
         </button>
         <button
           type="button"
           onClick={() => setIsLogin(!isLogin)}
           className="mt-4 text-sm text-blue-500 underline"
         >
-          {isLogin ? 'Need an account? Register' : 'Have an account? Login'}
+          {isLogin ? "Need an account? Register" : "Have an account? Login"}
         </button>
       </form>
     </div>

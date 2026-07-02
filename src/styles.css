@@ -46,7 +46,12 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --shadow-elegant: 0 10px 40px -12px oklch(0.35 0.09 155 / 0.25);
   --shadow-card: 0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04);
-  --gradient-hero: linear-gradient(135deg, oklch(0.32 0.09 155) 0%, oklch(0.42 0.11 165) 55%, oklch(0.55 0.14 175) 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.32 0.09 155) 0%,
+    oklch(0.42 0.11 165) 55%,
+    oklch(0.55 0.14 175) 100%
+  );
   --gradient-amber: linear-gradient(135deg, oklch(0.78 0.16 65) 0%, oklch(0.72 0.19 55) 100%);
 }
 
@@ -115,14 +120,21 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+  }
 }
 
 @utility gradient-hero {
@@ -140,4 +152,6 @@
 }
 
 /* Leaflet marker fix for bundlers */
-.leaflet-container { z-index: 0; }
+.leaflet-container {
+  z-index: 0;
+}

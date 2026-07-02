@@ -10,19 +10,19 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        '@vercel/nft': '/src/shims/nft-shim.ts',
+        "@vercel/nft": "/src/shims/nft-shim.ts",
       },
     },
     build: {
-      outDir: 'dist/client',
+      outDir: "dist/client",
       rollupOptions: {
-        external: ['@vercel/nft'],
+        external: ["@vercel/nft"],
       },
     },
   },
   nitro: {
     externals: {
-      external: ['@vercel/nft'],
+      external: ["@vercel/nft"],
     },
   },
   tanstackStart: {

@@ -23,7 +23,11 @@ function AppLayout() {
   }
 
   if (!user) {
-    return <div className="flex h-screen items-center justify-center bg-background">Redirecting to login...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        Redirecting to login...
+      </div>
+    );
   }
 
   return (
@@ -61,12 +65,12 @@ function AppLayout() {
         </nav>
 
         <div className="p-4 border-t">
-          <Button 
+          <Button
             onClick={() => {
               signOut();
               navigate({ to: "/" });
             }}
-            variant="ghost" 
+            variant="ghost"
             className="w-full justify-start gap-2 text-destructive hover:text-destructive"
           >
             <LogOut className="h-4 w-4" /> Sign Out
