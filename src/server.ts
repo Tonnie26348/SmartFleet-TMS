@@ -28,7 +28,15 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   const body = await response.clone().text();
   if (!isH3SwallowedErrorBody(body)) return response;
 
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  const capturedError = consumeLastCapturedError();
+  console.error("--- SERVER ERROR START ---");
+  console.error("h3 swallowed SSR error body:", body);
+  console.error("Captured Error:", capturedError);
+  if (capturedError instanceof Error) {
+    console.error("Stack Trace:", capturedError.stack);
+  }
+  console.error("--- SERVER ERROR END ---");
+
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
