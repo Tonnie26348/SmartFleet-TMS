@@ -74,17 +74,14 @@ export const TripsPage = () => {
   const columns: Column<Trip>[] = [
     {
       header: "Trip & Route",
-      accessor: (trip) => {
-        const route = routes.find((r) => r.id === trip.route_id);
-        return (
-          <div className="flex flex-col">
-            <span className="font-medium flex items-center gap-1">
-              <MapPin className="h-3 w-3 text-primary" /> {route?.name || "Unknown Route"}
-            </span>
-            <span className="text-xs text-muted-foreground">Scheduled</span>
-          </div>
-        );
-      },
+      accessor: (trip) => (
+        <div className="flex flex-col">
+          <span className="font-medium flex items-center gap-1">
+            <MapPin className="h-3 w-3 text-primary" /> {trip.route?.name || "Unknown Route"}
+          </span>
+          <span className="text-xs text-muted-foreground">Scheduled</span>
+        </div>
+      ),
     },
     {
       header: "Departure",
@@ -96,25 +93,19 @@ export const TripsPage = () => {
     },
     {
       header: "Vehicle",
-      accessor: (trip) => {
-        const vehicle = vehicles.find((v) => v.id === trip.vehicle_id);
-        return (
-          <div className="flex items-center gap-1.5 text-sm">
-            <Bus className="h-3 w-3" /> {vehicle?.plate_no || "Unknown Vehicle"}
-          </div>
-        );
-      },
+      accessor: (trip) => (
+        <div className="flex items-center gap-1.5 text-sm">
+          <Bus className="h-3 w-3" /> {trip.vehicle?.plate_no || "Unknown Vehicle"}
+        </div>
+      ),
     },
     {
       header: "Driver",
-      accessor: (trip) => {
-        const driver = drivers.find((d) => d.id === trip.driver_id);
-        return (
-          <div className="flex items-center gap-1.5 text-sm">
-            <User className="h-3 w-3" /> {driver?.full_name || "Unassigned"}
-          </div>
-        );
-      },
+      accessor: (trip) => (
+        <div className="flex items-center gap-1.5 text-sm">
+          <User className="h-3 w-3" /> {trip.driver?.full_name || "Unassigned"}
+        </div>
+      ),
     },
     {
       header: "Fare",

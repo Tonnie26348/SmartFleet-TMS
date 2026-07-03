@@ -1,11 +1,18 @@
 import { queryOptions, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Trip } from "@/types/trip";
+import { Trip } from "@/types/tms";
 
 export const tripsQO = queryOptions({
   queryKey: ["trips"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("trips").select("*");
+    const { data, error } = await supabase
+      .from("trips")
+      .select(`
+        *,
+        route:routes(name),
+        vehicle:vehicles(plate_no),
+        driver:drivers(full_name)
+      `);
     if (error) throw error;
     return (data ?? []) as Trip[];
   },
