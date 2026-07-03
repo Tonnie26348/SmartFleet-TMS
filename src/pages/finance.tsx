@@ -20,18 +20,18 @@ import {
 export default function FinancePage() {
   // Mock data for financial overview
   const financialStats = [
-    { title: "Total Revenue", value: "KSh 124,500", icon: DollarSign, trend: "+12%", positive: true },
-    { title: "Operating Costs", value: "KSh 45,200", icon: TrendingDown, trend: "-5%", positive: true },
-    { title: "Net Profit", value: "KSh 79,300", icon: TrendingUp, trend: "+18%", positive: true },
+    { title: "Total Revenue", value: "KSh 1,124,500", icon: DollarSign, trend: "+12%", positive: true },
+    { title: "Operating Costs", value: "KSh 445,200", icon: TrendingDown, trend: "-5%", positive: true },
+    { title: "Net Profit", value: "KSh 679,300", icon: TrendingUp, trend: "+18%", positive: true },
     { title: "Pending Invoices", value: "12", icon: FileText, trend: "3 overdue", positive: false },
   ];
 
   const transactions = [
-    { id: "TX1001", date: "2026-07-01", entity: "Trip #442 - Nairobi to Mombasa", amount: 1250.00, status: "Paid" },
-    { id: "TX1002", date: "2026-07-01", entity: "Fuel Refill - Station A", amount: -450.00, status: "Completed" },
-    { id: "TX1003", date: "2026-06-30", entity: "Trip #441 - Nakuru to Nairobi", amount: 800.00, status: "Pending" },
-    { id: "TX1004", date: "2026-06-30", entity: "Driver Salary - John Doe", amount: -1200.00, status: "Completed" },
-    { id: "TX1005", date: "2026-06-29", entity: "Insurance Premium", amount: -2500.00, status: "Completed" },
+    { id: "TX1001", date: "2026-07-01", entity: "Trip #442 - Nairobi to Mombasa", amount: 12500.00, status: "Paid" },
+    { id: "TX1002", date: "2026-07-01", entity: "Fuel Refill - Station A", amount: -4500.00, status: "Completed" },
+    { id: "TX1003", date: "2026-06-30", entity: "Trip #441 - Nakuru to Nairobi", amount: 8000.00, status: "Pending" },
+    { id: "TX1004", date: "2026-06-30", entity: "Driver Salary - John Doe", amount: -12000.00, status: "Completed" },
+    { id: "TX1005", date: "2026-06-29", entity: "Insurance Premium", amount: -25000.00, status: "Completed" },
   ];
 
   return (

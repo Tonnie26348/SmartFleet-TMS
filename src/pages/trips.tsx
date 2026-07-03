@@ -47,7 +47,7 @@ const tripSchema = z.object({
   vehicle_id: z.string().min(1, "Please select a vehicle"),
   driver_id: z.string().optional(),
   departure_at: z.string().min(1, "Departure time is required"),
-  base_fare: z.coerce.number().min(1, "Fare must be at least 1 KES"),
+  base_fare: z.coerce.number().min(100, "Fare must be at least 100 KES"),
 });
 
 type TripFormValues = z.infer<typeof tripSchema>;

@@ -29,7 +29,7 @@ export default function MyTripsPage() {
       time: "08:00 AM", 
       seat: "12A", 
       status: "Confirmed",
-      price: "KSh 45.00"
+      price: "KSh 1000.00"
     },
     { 
       id: "BOK-8842", 
@@ -38,7 +38,7 @@ export default function MyTripsPage() {
       time: "02:00 PM", 
       seat: "05B", 
       status: "Completed",
-      price: "KSh 20.00"
+      price: "KSh 1500.00"
     },
     { 
       id: "BOK-7710", 
@@ -47,7 +47,7 @@ export default function MyTripsPage() {
       time: "10:00 AM", 
       seat: "21C", 
       status: "Cancelled",
-      price: "KSh 40.00"
+      price: "KSh 1300.00"
     },
   ];
 
