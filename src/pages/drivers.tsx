@@ -46,9 +46,9 @@ export const DriversPage = () => {
       accessor: (driver) => (
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-            {((driver.profiles?.full_name || "D")[0] || "D").toUpperCase()}
+            {((driver.full_name || "D")[0] || "D").toUpperCase()}
           </div>
-          {driver.profiles?.full_name || "Unknown Driver"}
+          {driver.full_name || "Unknown Driver"}
         </div>
       ),
     },
@@ -56,7 +56,7 @@ export const DriversPage = () => {
       header: "Contact",
       accessor: (driver) => (
         <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Phone className="h-3 w-3" /> {driver.profiles?.phone || "No phone"}
+          <Phone className="h-3 w-3" /> {driver.phone || "No phone"}
         </div>
       ),
     },
