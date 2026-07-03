@@ -98,8 +98,9 @@ export const DriversPage = () => {
       toast.success("Driver added successfully");
       reset();
       setIsOpen(false);
-    } catch (error) {
-      toast.error("Failed to add driver. Please check the license number.");
+    } catch (error: any) {
+      console.error("Driver addition error:", error);
+      toast.error(`Failed to add driver: ${error.message || "Unknown error"}`);
     }
   };
 
