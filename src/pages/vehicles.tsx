@@ -94,8 +94,9 @@ export const VehicleManagementPage = () => {
       toast.success("Vehicle added successfully");
       reset();
       setIsOpen(false);
-    } catch (error) {
-      toast.error("Failed to add vehicle. Check if plate number is unique.");
+    } catch (error: any) {
+      console.error("Vehicle addition error:", error);
+      toast.error(`Failed to add vehicle: ${error.message || "Unknown error"}`);
     }
   };
 
