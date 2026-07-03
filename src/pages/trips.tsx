@@ -115,6 +115,7 @@ export const TripsPage = () => {
   ];
 
   const handleScheduleTrip = async (values: TripFormValues) => {
+    console.log("Submitting trip with driver_id:", values.driver_id);
     try {
       await addTrip({
         ...values,
