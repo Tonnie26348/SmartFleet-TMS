@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -85,7 +86,9 @@ export default function MyTripsPage() {
               </div>
               <div className="flex justify-between items-center pt-4 border-t">
                 <span className="font-bold text-lg">{booking.price}</span>
-                <Button variant="outline" size="sm">View Ticket</Button>
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/bookings/$code" params={{ code: booking.id }}>View Ticket</Link>
+                </Button>
               </div>
             </CardContent>
           </Card>
