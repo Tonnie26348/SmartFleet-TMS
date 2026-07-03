@@ -32,7 +32,7 @@ export const VehicleManagementPage = () => {
   } = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      plate_number: "",
+      plate_no: "",
       model: "",
       capacity: "",
       status: "available",
@@ -86,9 +86,9 @@ export const VehicleManagementPage = () => {
   const onSubmit = async (data: VehicleFormValues) => {
     try {
       await addVehicle({
-        plate_number: data.plate_number,
+        plate_no: data.plate_no,
         model: data.model,
-        capacity: data.capacity,
+        capacity: Number(data.capacity),
         status: data.status as any,
       });
       toast.success("Vehicle added successfully");
@@ -123,10 +123,10 @@ export const VehicleManagementPage = () => {
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="plate_number">Plate Number</Label>
-                <Input id="plate_number" placeholder="KXX 000X" {...register("plate_number")} />
-                {errors.plate_number && (
-                  <p className="text-xs text-destructive">{errors.plate_number.message}</p>
+                <Label htmlFor="plate_no">Plate Number</Label>
+                <Input id="plate_no" placeholder="KXX 000X" {...register("plate_no")} />
+                {errors.plate_no && (
+                  <p className="text-xs text-destructive">{errors.plate_no.message}</p>
                 )}
               </div>
               <div className="space-y-2">

@@ -17,7 +17,7 @@ export const useVehicles = () => {
 
   const addVehicleMutation = useMutation({
     mutationFn: async (vehicle: Omit<Vehicle, "id" | "created_at">) => {
-      const { error } = await supabase.from("vehicles").insert([vehicle]);
+      const { error } = await supabase.from("vehicles").insert([{ ...vehicle, plate_no: vehicle.plate_no }]);
       if (error) throw error;
       return vehicle;
     },

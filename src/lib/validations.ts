@@ -13,7 +13,7 @@ export const driverSchema = z.object({
 });
 
 export const vehicleSchema = z.object({
-  plate_number: z.string().min(3, "Invalid plate number"),
+  plate_no: z.string().min(3, "Invalid plate number"),
   model: z.string().min(2, "Model is required"),
   capacity: z.coerce
     .number()
