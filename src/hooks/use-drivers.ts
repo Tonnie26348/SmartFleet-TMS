@@ -17,24 +17,11 @@ export const useDrivers = () => {
 
   const addDriverMutation = useMutation({
     mutationFn: async (driverData: any) => {
-      // 1. Create the profile first
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .insert([
-          {
-            full_name: driverData.full_name,
-            phone: driverData.phone,
-          },
-        ])
-        .select()
-        .single();
-
-      if (profileError) throw profileError;
-
-      // 2. Create the driver linked to the profile
+      // Insert driver directly. A profile is not required unless the driver needs to log in.
       const { error: driverError } = await supabase.from("drivers").insert([
         {
-          user_id: profile.id,
+          full_name: driverData.full_name,
+          phone: driverData.phone,
           license_no: driverData.license_no,
           license_expiry: driverData.license_expiry,
         },
