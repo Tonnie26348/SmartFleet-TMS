@@ -210,7 +210,7 @@ export const TripsPage = () => {
                             <SelectContent>
                               {drivers.map((d) => (
                                 <SelectItem key={d.id} value={d.id}>
-                                  {d.profiles?.full_name || "Unknown Driver"}
+                                  {d.full_name || "Unknown Driver"}
                                 </SelectItem>
                               ))}
                             </SelectContent>
