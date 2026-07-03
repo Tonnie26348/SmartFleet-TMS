@@ -20,9 +20,9 @@ import {
 export default function FinancePage() {
   // Mock data for financial overview
   const financialStats = [
-    { title: "Total Revenue", value: "$124,500", icon: DollarSign, trend: "+12%", positive: true },
-    { title: "Operating Costs", value: "$45,200", icon: TrendingDown, trend: "-5%", positive: true },
-    { title: "Net Profit", value: "$79,300", icon: TrendingUp, trend: "+18%", positive: true },
+    { title: "Total Revenue", value: "KSh 124,500", icon: DollarSign, trend: "+12%", positive: true },
+    { title: "Operating Costs", value: "KSh 45,200", icon: TrendingDown, trend: "-5%", positive: true },
+    { title: "Net Profit", value: "KSh 79,300", icon: TrendingUp, trend: "+18%", positive: true },
     { title: "Pending Invoices", value: "12", icon: FileText, trend: "3 overdue", positive: false },
   ];
 
@@ -85,7 +85,7 @@ export default function FinancePage() {
                   <TableCell>{tx.date}</TableCell>
                   <TableCell>{tx.entity}</TableCell>
                   <TableCell className={`text-right font-medium ${tx.amount > 0 ? "text-green-600" : "text-red-600"}`}>
-                    {tx.amount > 0 ? `+$${tx.amount}` : `-$${Math.abs(tx.amount)}`}
+                    {tx.amount > 0 ? `+KSh ${tx.amount}` : `-KSh ${Math.abs(tx.amount)}`}
                   </TableCell>
                   <TableCell className="text-center">
                     <span className={`px-2 py-1 rounded-full text-[10px] font-semibold ${
