@@ -20,6 +20,8 @@ import { Route as AppVehiclesRouteImport } from './routes/app.vehicles'
 import { Route as AppTripsRouteImport } from './routes/app.trips'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppRoutesRouteImport } from './routes/app.routes'
+import { Route as AppMyTripsRouteImport } from './routes/app.my-trips'
+import { Route as AppFinanceRouteImport } from './routes/app.finance'
 import { Route as AppDriversRouteImport } from './routes/app.drivers'
 
 const SearchRoute = SearchRouteImport.update({
@@ -77,6 +79,16 @@ const AppRoutesRoute = AppRoutesRouteImport.update({
   path: '/routes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMyTripsRoute = AppMyTripsRouteImport.update({
+  id: '/my-trips',
+  path: '/my-trips',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFinanceRoute = AppFinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDriversRoute = AppDriversRouteImport.update({
   id: '/drivers',
   path: '/drivers',
@@ -89,6 +101,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
+  '/app/finance': typeof AppFinanceRoute
+  '/app/my-trips': typeof AppMyTripsRoute
   '/app/routes': typeof AppRoutesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
@@ -102,6 +116,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
+  '/app/finance': typeof AppFinanceRoute
+  '/app/my-trips': typeof AppMyTripsRoute
   '/app/routes': typeof AppRoutesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
@@ -117,6 +133,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
   '/app/drivers': typeof AppDriversRoute
+  '/app/finance': typeof AppFinanceRoute
+  '/app/my-trips': typeof AppMyTripsRoute
   '/app/routes': typeof AppRoutesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/trips': typeof AppTripsRoute
@@ -133,6 +151,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/search'
     | '/app/drivers'
+    | '/app/finance'
+    | '/app/my-trips'
     | '/app/routes'
     | '/app/settings'
     | '/app/trips'
@@ -146,6 +166,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/search'
     | '/app/drivers'
+    | '/app/finance'
+    | '/app/my-trips'
     | '/app/routes'
     | '/app/settings'
     | '/app/trips'
@@ -160,6 +182,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/search'
     | '/app/drivers'
+    | '/app/finance'
+    | '/app/my-trips'
     | '/app/routes'
     | '/app/settings'
     | '/app/trips'
@@ -257,6 +281,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRoutesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/my-trips': {
+      id: '/app/my-trips'
+      path: '/my-trips'
+      fullPath: '/app/my-trips'
+      preLoaderRoute: typeof AppMyTripsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/finance': {
+      id: '/app/finance'
+      path: '/finance'
+      fullPath: '/app/finance'
+      preLoaderRoute: typeof AppFinanceRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/drivers': {
       id: '/app/drivers'
       path: '/drivers'
@@ -269,6 +307,8 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDriversRoute: typeof AppDriversRoute
+  AppFinanceRoute: typeof AppFinanceRoute
+  AppMyTripsRoute: typeof AppMyTripsRoute
   AppRoutesRoute: typeof AppRoutesRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTripsRoute: typeof AppTripsRoute
@@ -278,6 +318,8 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDriversRoute: AppDriversRoute,
+  AppFinanceRoute: AppFinanceRoute,
+  AppMyTripsRoute: AppMyTripsRoute,
   AppRoutesRoute: AppRoutesRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTripsRoute: AppTripsRoute,

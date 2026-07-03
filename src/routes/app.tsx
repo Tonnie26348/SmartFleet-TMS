@@ -29,8 +29,10 @@ function AppLayout() {
           navigate({ to: "/app/drivers" });
         } else if (user.role === "super_admin" || user.role === "ops_manager") {
           navigate({ to: "/app" }); // Admin stays on dashboard
+        } else if (user.role === "passenger") {
+          navigate({ to: "/app/my-trips" }); // Passengers go to My Trips
         } else {
-          navigate({ to: "/app" }); // Passengers stay on dashboard
+          navigate({ to: "/app" }); 
         }
       }
     }
@@ -98,7 +100,23 @@ function AppLayout() {
                   <Users className="h-4 w-4" /> Drivers
                 </Link>
               </Button>
+              {user.role === "accountant" && (
+                <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                  <Link to="/app/finance">
+                    <DollarSign className="h-4 w-4" /> Finance
+                  </Link>
+                </Button>
+              )}
             </>
+          )}
+
+          {/* Passenger Only Link */}
+          {user.role === "passenger" && (
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link to="/app/my-trips">
+                <Ticket className="h-4 w-4" /> My Trips
+              </Link>
+            </Button>
           )}
 
           {/* Driver Only Link (or Admin) */}
